@@ -33,16 +33,13 @@ namespace Loth.Infra.Data.Mappings
                 .HasMaxLength(250);
 
             Property(x => x.Bairro)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
             Property(x => x.Cidade)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
             Property(x => x.Estado)
-                .IsRequired()
-                .HasMaxLength(100);            
+                .IsRequired();            
 
             ToTable("Enderecos");
         }
