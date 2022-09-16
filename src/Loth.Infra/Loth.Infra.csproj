@@ -55,6 +55,7 @@
     <Compile Include="Data\Mappings\EnderecoConfig.cs" />
     <Compile Include="Data\Mappings\FornecedorConfig.cs" />
     <Compile Include="Data\Mappings\ProdutoConfig.cs" />
+    <Compile Include="Data\Repository\Repository.cs" />
     <Compile Include="LothProdutosDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
