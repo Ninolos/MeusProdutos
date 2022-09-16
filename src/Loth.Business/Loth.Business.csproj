@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Models\Entity.cs" />
+    <Compile Include="Core\Notificacoes\INotificador.cs" />
+    <Compile Include="Core\Notificacoes\Notificacao.cs" />
+    <Compile Include="Core\Notificacoes\Notificador.cs" />
     <Compile Include="Core\Services\BaseService.cs" />
     <Compile Include="Core\Validations\Documentos\CpfValidacao.cs" />
     <Compile Include="Data\IRepository.cs" />

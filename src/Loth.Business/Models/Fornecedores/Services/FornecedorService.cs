@@ -1,4 +1,5 @@
-﻿using Loth.Business.Core.Services;
+﻿using Loth.Business.Core.Notificacoes;
+using Loth.Business.Core.Services;
 using Loth.Business.Models.Fornecedores.Validations;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,9 @@ namespace Loth.Business.Models.Fornecedores.Services
     {
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IEnderecoRepository _enderecoRepository;
-        public FornecedorService(IFornecedorRepository fornecedorRepository, IEnderecoRepository enderecoRepository)
+        public FornecedorService(IFornecedorRepository fornecedorRepository, 
+                                    IEnderecoRepository enderecoRepository,
+                                        INotificador notificador) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _enderecoRepository = enderecoRepository;
@@ -41,7 +44,11 @@ namespace Loth.Business.Models.Fornecedores.Services
         {
             var fornecedor = await _fornecedorRepository.ObterFornecedorProdutosEndereco(id);
 
-            if (fornecedor.Produtos.Any()) return;
+            if (fornecedor.Produtos.Any())
+            {
+                Notificar("O fornecedor possui produtos cadastrados");
+                return;
+            }
 
             if (fornecedor.Endereco != null)
             {
@@ -62,7 +69,10 @@ namespace Loth.Business.Models.Fornecedores.Services
         {
             var fornecedorAtual = await _fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento && f.Id != fornecedor.Id);
 
-            return fornecedorAtual.Any();
+            if(!fornecedorAtual.Any()) return false;
+
+            Notificar("Ja existe um fornecedor com esse documento");
+            return true;
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
-﻿using Loth.Business.Core.Services;
+﻿using Loth.Business.Core.Notificacoes;
+using Loth.Business.Core.Services;
 using Loth.Business.Models.Produtos.Validations;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Loth.Business.Models.Produtos.Services
     {
         private readonly IProdutorepository _produtoRepository;
 
-        public ProdutoService(IProdutorepository produtorepository)
+        public ProdutoService(IProdutorepository produtorepository, INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtorepository;
         }
