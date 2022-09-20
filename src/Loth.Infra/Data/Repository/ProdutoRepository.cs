@@ -1,5 +1,6 @@
 ﻿using Loth.Business.Models.Fornecedores;
 using Loth.Business.Models.Produtos;
+using Loth.Infra.Data.Context;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,6 +12,7 @@ namespace Loth.Infra.Data.Repository
 {
     public class ProdutoRepository : Repository<Produto>, IProdutorepository
     {
+        public ProdutoRepository(MeuDbContex context) : base(context){ }
         public async Task<Produto> ObterProdutoFornecedor(Guid id)
         {
             return await Db.Produtos.AsNoTracking()
