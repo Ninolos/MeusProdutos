@@ -51,22 +51,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Models\Entity.cs" />
+    <Compile Include="Core\Notificacoes\INotificador.cs" />
+    <Compile Include="Core\Notificacoes\Notificacao.cs" />
+    <Compile Include="Core\Notificacoes\Notificador.cs" />
+    <Compile Include="Core\Services\BaseService.cs" />
     <Compile Include="Core\Validations\Documentos\CpfValidacao.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Models\Fornecedores\Endereco.cs" />
     <Compile Include="Models\Fornecedores\Fornecedor.cs" />
     <Compile Include="Models\Fornecedores\IEnderecoRepository.cs" />
     <Compile Include="Models\Fornecedores\IFornecedorRepository.cs" />
+    <Compile Include="Models\Fornecedores\Services\FornecedorService.cs" />
+    <Compile Include="Models\Fornecedores\Services\IFornecedorService.cs" />
     <Compile Include="Models\Fornecedores\TipoFornecedor.cs" />
     <Compile Include="Models\Fornecedores\Validations\EnderecoValidation.cs" />
     <Compile Include="Models\Fornecedores\Validations\FornecedorValidation.cs" />
     <Compile Include="Models\Produtos\IProdutorepository.cs" />
     <Compile Include="Models\Produtos\Produto.cs" />
+    <Compile Include="Models\Produtos\Services\IProdutoService.cs" />
+    <Compile Include="Models\Produtos\Services\ProdutoService.cs" />
     <Compile Include="Models\Produtos\Validations\ProdutoValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
