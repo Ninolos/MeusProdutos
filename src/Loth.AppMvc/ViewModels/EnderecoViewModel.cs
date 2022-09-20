@@ -43,7 +43,7 @@ namespace Loth.AppMvc.ViewModels
         [StringLength(50, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
         public string Estado { get; set; }
 
-        [HiddenInput]
-        public Guid FornecedorId { get; set; }
+        //[HiddenInput]
+        //public Guid FornecedorId { get; set; }
     }
 }
