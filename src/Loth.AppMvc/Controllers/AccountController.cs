@@ -16,17 +16,8 @@ namespace Loth.AppMvc.Controllers
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
-
-        public AccountController()
-        {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
+        private ApplicationUserManager _userManager;        
+        
 
         public ApplicationSignInManager SignInManager
         {

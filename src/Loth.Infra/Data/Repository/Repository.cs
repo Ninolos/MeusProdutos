@@ -17,9 +17,9 @@ namespace Loth.Infra.Data.Repository
         protected readonly MeuDbContex Db;
         protected readonly DbSet<TEntity> DbSet;
 
-        protected Repository()
+        protected Repository(MeuDbContex db)
         {
-            Db = new MeuDbContex();
+            Db = db;
             DbSet = Db.Set<TEntity>(); //acesso a entidade
         }
         public virtual async Task<TEntity> ObterPorId(Guid id)

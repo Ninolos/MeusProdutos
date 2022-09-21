@@ -1,5 +1,9 @@
-﻿using Microsoft.Owin;
+﻿using Loth.AppMvc.App_Start;
+using Microsoft.Owin;
 using Owin;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 
 [assembly: OwinStartupAttribute(typeof(Loth.AppMvc.Startup))]
 namespace Loth.AppMvc
@@ -9,6 +13,15 @@ namespace Loth.AppMvc
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
+            //Concentrar essas configs do Global.asa no Startup para manter parecido ao ASP.NET Core
+
+            //classe config injecao de dependencia para ser chamada no inicio da aplicaçao
+            DependencyInjectionConfig.RegisterDIContainer();
+            AreaRegistration.RegisterAllAreas();
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 }

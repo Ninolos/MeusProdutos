@@ -17,15 +17,17 @@ using AutoMapper;
 
 namespace Loth.AppMvc.Controllers
 {
-    public class ProdutosController : Controller
+    public class ProdutosController : BaseController
     {
         private readonly IProdutorepository _produtoRepository;
         private readonly IProdutoService _produtoService;
         private readonly IMapper _mapper;
 
-        public ProdutosController()
+        public ProdutosController(IProdutorepository produtorepository, IProdutoService produtoService, IMapper mapper)
         {
-            
+            _produtoRepository = produtorepository;
+            _produtoService = produtoService;
+            _mapper = mapper;
         }
 
         [Route("lista-de-produtos")]

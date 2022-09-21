@@ -11,6 +11,7 @@ namespace Loth.Infra.Data.Repository
 {
     public class EnderecoRepository : Repository<Endereco>, IEnderecoRepository
     {
+        public EnderecoRepository(MeuDbContex context) : base(context) { }
         public async Task<Endereco> ObterEnderecoPorFornecedor(Guid fornecedorId)
         {
             return await ObterPorId(fornecedorId);
