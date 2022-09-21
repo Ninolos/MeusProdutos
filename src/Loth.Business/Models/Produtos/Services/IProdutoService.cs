@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Loth.Business.Models.Produtos.Services
 {
-    public interface IFornecedorService : IDisposable
+    public interface IProdutoService : IDisposable
     {
         Task Adicionar(Produto produto);
         Task Atualizar(Produto produto);
