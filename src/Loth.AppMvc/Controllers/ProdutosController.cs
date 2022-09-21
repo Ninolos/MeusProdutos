@@ -17,7 +17,7 @@ using AutoMapper;
 
 namespace Loth.AppMvc.Controllers
 {
-    public class ProdutosController : Controller
+    public class ProdutosController : BaseController
     {
         private readonly IProdutorepository _produtoRepository;
         private readonly IProdutoService _produtoService;
