@@ -107,6 +107,20 @@ namespace Loth.AppMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("atualizar-endereco-fornecedor")]
+
+        public async Task<ActionResult> AtualizarEndereco(Guid id)
+        {
+            var fornecedor = await ObterFornecedorEndereco(id);
+
+            if(fornecedor == null)
+            {
+                HttpNotFound();
+            }
+
+            return PartialView("_AtualizarEndereco", new FornecedorViewModel { Endereco = fornecedor.Endereco });
+        }
+
 
         private async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)
         {
