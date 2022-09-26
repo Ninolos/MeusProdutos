@@ -14,6 +14,7 @@ using Loth.Business.Models.Produtos.Services;
 using Loth.Infra.Data.Repository;
 using Loth.Business.Core.Notificacoes;
 using AutoMapper;
+using Loth.Business.Models.Fornecedores;
 
 namespace Loth.AppMvc.Controllers
 {
@@ -21,13 +22,15 @@ namespace Loth.AppMvc.Controllers
     {
         private readonly IProdutorepository _produtoRepository;
         private readonly IProdutoService _produtoService;
+        private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IMapper _mapper;
 
-        public ProdutosController(IProdutorepository produtorepository, IProdutoService produtoService, IMapper mapper)
+        public ProdutosController(IProdutorepository produtorepository, IProdutoService produtoService, IMapper mapper, IFornecedorRepository fornecedorRepository)
         {
             _produtoRepository = produtorepository;
             _produtoService = produtoService;
             _mapper = mapper;
+            _fornecedorRepository = fornecedorRepository;
         }
 
         [Route("lista-de-produtos")]
@@ -50,9 +53,10 @@ namespace Loth.AppMvc.Controllers
         }
 
         [Route("novo-produto")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var produtoViewModel = await PopularFornecedores(new ProdutoViewModel());
+            return View(produtoViewModel);
         }
 
         [Route("novo-produto")]
@@ -60,6 +64,8 @@ namespace Loth.AppMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(ProdutoViewModel produtoViewModel)
         {
+            produtoViewModel = await PopularFornecedores(produtoViewModel);
+
             if (ModelState.IsValid)
             {
                 await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
@@ -129,6 +135,12 @@ namespace Loth.AppMvc.Controllers
         {
             var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
             
+            return produto;
+        }
+
+        private async Task<ProdutoViewModel> PopularFornecedores(ProdutoViewModel produto)
+        {
+            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
             return produto;
         }
 

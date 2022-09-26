@@ -26,5 +26,13 @@ namespace Loth.Infra.Data.Repository
                 .Include(p => p.Produtos)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task<IEnumerable<Fornecedor>> ObterTodos()
+        {
+            return await Db.Fornecedores.AsNoTracking()
+                .Include(p => p.Endereco)
+                .Include(p => p.Produtos).ToListAsync();
+        }
+        
     }
 }

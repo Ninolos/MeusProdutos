@@ -11,5 +11,7 @@ namespace Loth.Business.Models.Fornecedores
     {
         Task<Fornecedor> ObterFornecedorEndereco(Guid id);
         Task<Fornecedor> ObterFornecedorProdutosEndereco(Guid id);
+
+        Task<IEnumerable<Fornecedor>> ObterTodos();
     }
 }
