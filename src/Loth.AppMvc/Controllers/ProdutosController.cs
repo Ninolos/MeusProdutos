@@ -15,9 +15,10 @@ using Loth.Infra.Data.Repository;
 using Loth.Business.Core.Notificacoes;
 using AutoMapper;
 using Loth.Business.Models.Fornecedores;
+using System.IO;
 
 namespace Loth.AppMvc.Controllers
-{
+{    
     public class ProdutosController : BaseController
     {
         private readonly IProdutorepository _produtoRepository;
@@ -25,21 +26,28 @@ namespace Loth.AppMvc.Controllers
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IMapper _mapper;
 
-        public ProdutosController(IProdutorepository produtorepository, IProdutoService produtoService, IMapper mapper, IFornecedorRepository fornecedorRepository)
+        public ProdutosController(IProdutorepository produtoRepository,
+                                  IProdutoService produtoService,
+                                  IFornecedorRepository fornecedorRepository,
+                                  IMapper mapper)                                  
         {
-            _produtoRepository = produtorepository;
+            _produtoRepository = produtoRepository;
             _produtoService = produtoService;
-            _mapper = mapper;
             _fornecedorRepository = fornecedorRepository;
+            _mapper = mapper;
         }
 
+        
         [Route("lista-de-produtos")]
+        [HttpGet]
         public async Task<ActionResult> Index()
-        {         
-            return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.Obtertodos()));
+        {
+            return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterProdutosFornecedores()));
         }
 
-        [Route("dados-de-produtp/{id:guid}")]
+        
+        [Route("dados-do-produto/{id:guid}")]
+        [HttpGet]
         public async Task<ActionResult> Details(Guid id)
         {
             var produtoViewModel = await ObterProduto(id);
@@ -52,20 +60,23 @@ namespace Loth.AppMvc.Controllers
             return View(produtoViewModel);
         }
 
+        
         [Route("novo-produto")]
+        [HttpGet]
         public async Task<ActionResult> Create()
         {
             var produtoViewModel = await PopularFornecedores(new ProdutoViewModel());
+
             return View(produtoViewModel);
         }
 
+        
         [Route("novo-produto")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(ProdutoViewModel produtoViewModel)
         {
             produtoViewModel = await PopularFornecedores(produtoViewModel);
-
             if (ModelState.IsValid)
             {
                 await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
@@ -76,7 +87,9 @@ namespace Loth.AppMvc.Controllers
             return View(produtoViewModel);
         }
 
+        
         [Route("editar-produto/{id:guid}")]
+        [HttpGet]
         public async Task<ActionResult> Edit(Guid id)
         {
             var produtoViewModel = await ObterProduto(id);
@@ -85,24 +98,49 @@ namespace Loth.AppMvc.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(produtoViewModel);
         }
 
+        
         [Route("editar-produto/{id:guid}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(ProdutoViewModel produtoViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                await _produtoService.Atualizar(_mapper.Map<Produto>(produtoViewModel));
+            if (!ModelState.IsValid) return View(produtoViewModel);
 
-                return RedirectToAction("Index");
-            }
-            return View(produtoViewModel);
+            var produtoAtualizacao = await ObterProduto(produtoViewModel.Id);
+            produtoViewModel.Imagem = produtoAtualizacao.Imagem;
+
+            //if (produtoViewModel.ImagemUpload != null)
+            //{
+            //    var imgPrefixo = Guid.NewGuid() + "_";
+            //    if (!UploadImagem(produtoViewModel.ImagemUpload, imgPrefixo))
+            //    {
+            //        return View(produtoViewModel);
+            //    }
+
+            //    produtoAtualizacao.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+            //}
+
+            produtoAtualizacao.Nome = produtoViewModel.Nome;
+            produtoAtualizacao.Descricao = produtoViewModel.Descricao;
+            produtoAtualizacao.Valor = produtoViewModel.Valor;
+            produtoAtualizacao.Ativo = produtoViewModel.Ativo;
+            produtoAtualizacao.FornecedorId = produtoViewModel.FornecedorId;
+            produtoAtualizacao.Fornecedor = produtoViewModel.Fornecedor;
+
+            await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
+
+            //if (!OperacaoValida()) return View(produtoViewModel);
+
+            return RedirectToAction("Index");
         }
 
+        
         [Route("excluir-produto/{id:guid}")]
+        [HttpGet]
         public async Task<ActionResult> Delete(Guid id)
         {
             var produtoViewModel = await ObterProduto(id);
@@ -111,9 +149,11 @@ namespace Loth.AppMvc.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(produtoViewModel);
         }
 
+        
         [Route("excluir-produto/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -127,14 +167,16 @@ namespace Loth.AppMvc.Controllers
             }
 
             await _produtoService.Remover(id);
-            
+
+            //if (!OperacaoValida()) return View(produtoViewModel);
+
             return RedirectToAction("Index");
         }
 
         private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
             var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
-            
+            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
             return produto;
         }
 
@@ -144,6 +186,26 @@ namespace Loth.AppMvc.Controllers
             return produto;
         }
 
+        private bool UploadImagem(HttpPostedFileBase img, string imgPrefixo)
+        {
+            if (img == null || img.ContentLength <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "Imagem em formato inválido!");
+                return false;
+            }
+
+            var path = Path.Combine(HttpContext.Server.MapPath("~/imagens"), imgPrefixo + img.FileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError(string.Empty, "Já existe um arquivo com este nome!");
+                return false;
+            }
+
+            img.SaveAs(path);
+            return true;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -151,6 +213,7 @@ namespace Loth.AppMvc.Controllers
                 _produtoRepository.Dispose();
                 _produtoService.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }
