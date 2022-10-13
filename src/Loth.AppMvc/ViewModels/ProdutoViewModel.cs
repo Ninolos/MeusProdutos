@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Loth.AppMvc.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -34,8 +35,9 @@ namespace Loth.AppMvc.ViewModels
         //public HttpPostedFileBase ImagemUpload { get; set; }
 
         [DisplayName("Imagem do Produto")]
-        public string Imagem { get; set; } 
+        public string Imagem { get; set; }
 
+        [Moeda]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public decimal Valor { get; set; }
 
