@@ -77,14 +77,22 @@ namespace Loth.AppMvc.Controllers
         public async Task<ActionResult> Create(ProdutoViewModel produtoViewModel)
         {
             produtoViewModel = await PopularFornecedores(produtoViewModel);
-            if (ModelState.IsValid)
-            {
-                await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
+            if (!ModelState.IsValid) return View(produtoViewModel);
 
-                return RedirectToAction("Index");
+            var imgPrefixo = Guid.NewGuid() + "_";
+
+            if (!UploadImagem(produtoViewModel.ImagemUpload, imgPrefixo))
+            {
+                return View(produtoViewModel);
             }
 
-            return View(produtoViewModel);
+            produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+
+            await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
+
+            return RedirectToAction("Index");          
+
+            
         }
 
         
@@ -113,16 +121,16 @@ namespace Loth.AppMvc.Controllers
             var produtoAtualizacao = await ObterProduto(produtoViewModel.Id);
             produtoViewModel.Imagem = produtoAtualizacao.Imagem;
 
-            //if (produtoViewModel.ImagemUpload != null)
-            //{
-            //    var imgPrefixo = Guid.NewGuid() + "_";
-            //    if (!UploadImagem(produtoViewModel.ImagemUpload, imgPrefixo))
-            //    {
-            //        return View(produtoViewModel);
-            //    }
+            if (produtoViewModel.ImagemUpload != null)
+            {
+                var imgPrefixo = Guid.NewGuid() + "_";
+                if (!UploadImagem(produtoViewModel.ImagemUpload, imgPrefixo))
+                {
+                    return View(produtoViewModel);
+                }
 
-            //    produtoAtualizacao.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
-            //}
+                produtoAtualizacao.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+            }
 
             produtoAtualizacao.Nome = produtoViewModel.Nome;
             produtoAtualizacao.Descricao = produtoViewModel.Descricao;
