@@ -24,17 +24,18 @@ namespace Loth.AppMvc.Controllers
         private readonly IProdutorepository _produtoRepository;
         private readonly IProdutoService _produtoService;
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper;        
 
         public ProdutosController(IProdutorepository produtoRepository,
                                   IProdutoService produtoService,
                                   IFornecedorRepository fornecedorRepository,
-                                  IMapper mapper)                                  
+                                  IMapper mapper,
+                                  INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
             _fornecedorRepository = fornecedorRepository;
-            _mapper = mapper;
+            _mapper = mapper;            
         }
 
         

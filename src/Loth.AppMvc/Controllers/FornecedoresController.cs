@@ -8,6 +8,7 @@ using Loth.AppMvc.ViewModels;
 using Loth.Business.Models.Fornecedores;
 using Loth.Infra.Data.Repository;
 using System;
+using Loth.Business.Core.Notificacoes;
 
 namespace Loth.AppMvc.Controllers
 {
@@ -15,13 +16,14 @@ namespace Loth.AppMvc.Controllers
     {
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IFornecedorService _fornecedorService;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper;       
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IFornecedorService fornecedorService, IMapper mapper)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, IFornecedorService fornecedorService, IMapper mapper, INotificador notificador) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
             _mapper = mapper;
+            
         }
 
         [Route("lista-de-fornecedores")]
@@ -58,8 +60,7 @@ namespace Loth.AppMvc.Controllers
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorService.Adicionar(fornecedor);
 
-            //TODO:
-            //e se nao der certo
+            if(!OperacaoValida()) return View(fornecedorViewModel);
 
             return RedirectToAction("Index");
         }
