@@ -189,6 +189,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\CultureConfig.cs" />
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -200,6 +201,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProdutosController.cs" />
+    <Compile Include="Extensions\CustomAuthorization.cs" />
+    <Compile Include="Extensions\MoedaAttribute.cs" />
+    <Compile Include="Extensions\RazorExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -208,6 +212,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ErrorViewModel.cs" />
     <Compile Include="ViewModels\EnderecoViewModel.cs" />
     <Compile Include="ViewModels\FornecedorViewModel.cs" />
     <Compile Include="ViewModels\ProdutoViewModel.cs" />
@@ -221,6 +226,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="imagens\a890ae92-2653-429f-a453-d6e06dc4ae49_Pichau_ %289%29.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -269,21 +275,24 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Produtos\Create.cshtml" />
-    <Content Include="Views\Produtos\Delete.cshtml" />
-    <Content Include="Views\Produtos\Details.cshtml" />
-    <Content Include="Views\Produtos\Edit.cshtml" />
-    <Content Include="Views\Produtos\Index.cshtml" />
     <Content Include="Views\Fornecedores\Index.cshtml" />
     <Content Include="Views\Fornecedores\Create.cshtml" />
     <Content Include="Views\Fornecedores\Delete.cshtml" />
     <Content Include="Views\Fornecedores\Details.cshtml" />
     <Content Include="Views\Fornecedores\Edit.cshtml" />
     <Content Include="Views\Fornecedores\_Endereco.cshtml" />
+    <Content Include="Views\Fornecedores\_DetalhesEndereco.cshtml" />
+    <Content Include="Views\Fornecedores\_AtualizarEndereco.cshtml" />
+    <Content Include="Views\Produtos\Create.cshtml" />
+    <Content Include="Views\Produtos\Delete.cshtml" />
+    <Content Include="Views\Produtos\Details.cshtml" />
+    <Content Include="Views\Produtos\Edit.cshtml" />
+    <Content Include="Views\Produtos\Index.cshtml" />
+    <Content Include="Views\Produtos\_ListaProdutos.cshtml" />
+    <Content Include="Views\Shared\_ErrorSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
