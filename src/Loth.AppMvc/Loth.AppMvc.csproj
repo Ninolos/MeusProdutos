@@ -201,6 +201,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProdutosController.cs" />
+    <Compile Include="Extensions\CustomAuthorization.cs" />
     <Compile Include="Extensions\MoedaAttribute.cs" />
     <Compile Include="Extensions\RazorExtensions.cs" />
     <Compile Include="Global.asax.cs">
@@ -211,6 +212,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ErrorViewModel.cs" />
     <Compile Include="ViewModels\EnderecoViewModel.cs" />
     <Compile Include="ViewModels\FornecedorViewModel.cs" />
     <Compile Include="ViewModels\ProdutoViewModel.cs" />

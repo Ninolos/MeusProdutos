@@ -16,11 +16,14 @@ using Loth.Business.Core.Notificacoes;
 using AutoMapper;
 using Loth.Business.Models.Fornecedores;
 using System.IO;
+using Loth.AppMvc.Extensions;
 
 namespace Loth.AppMvc.Controllers
-{    
+{
+    [Authorize]
     public class ProdutosController : BaseController
-    {
+    {        
+
         private readonly IProdutorepository _produtoRepository;
         private readonly IProdutoService _produtoService;
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -38,7 +41,7 @@ namespace Loth.AppMvc.Controllers
             _mapper = mapper;            
         }
 
-        
+        [AllowAnonymous]
         [Route("lista-de-produtos")]
         [HttpGet]
         public async Task<ActionResult> Index()
@@ -46,7 +49,8 @@ namespace Loth.AppMvc.Controllers
             return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterProdutosFornecedores()));
         }
 
-        
+
+        [ClaimsAuthorize("Produto", "Editar")]
         [Route("dados-do-produto/{id:guid}")]
         [HttpGet]
         public async Task<ActionResult> Details(Guid id)
@@ -61,7 +65,7 @@ namespace Loth.AppMvc.Controllers
             return View(produtoViewModel);
         }
 
-        
+        [ClaimsAuthorize("Produto", "Adicionar")]
         [Route("novo-produto")]
         [HttpGet]
         public async Task<ActionResult> Create()
@@ -71,7 +75,7 @@ namespace Loth.AppMvc.Controllers
             return View(produtoViewModel);
         }
 
-        
+        [ClaimsAuthorize("Produto", "Adicionar")]
         [Route("novo-produto")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -96,7 +100,7 @@ namespace Loth.AppMvc.Controllers
             
         }
 
-        
+        [ClaimsAuthorize("Produto", "Editar")]
         [Route("editar-produto/{id:guid}")]
         [HttpGet]
         public async Task<ActionResult> Edit(Guid id)
@@ -111,7 +115,7 @@ namespace Loth.AppMvc.Controllers
             return View(produtoViewModel);
         }
 
-        
+        [ClaimsAuthorize("Produto", "Editar")]
         [Route("editar-produto/{id:guid}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -142,12 +146,12 @@ namespace Loth.AppMvc.Controllers
 
             await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
 
-            //if (!OperacaoValida()) return View(produtoViewModel);
+            if (!OperacaoValida()) return View(produtoViewModel);
 
             return RedirectToAction("Index");
         }
 
-        
+        [ClaimsAuthorize("Produto", "Excluir")]
         [Route("excluir-produto/{id:guid}")]
         [HttpGet]
         public async Task<ActionResult> Delete(Guid id)
@@ -162,7 +166,7 @@ namespace Loth.AppMvc.Controllers
             return View(produtoViewModel);
         }
 
-        
+        [ClaimsAuthorize("Produto", "Excluir")]
         [Route("excluir-produto/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -177,11 +181,12 @@ namespace Loth.AppMvc.Controllers
 
             await _produtoService.Remover(id);
 
-            //if (!OperacaoValida()) return View(produtoViewModel);
+            if (!OperacaoValida()) return View(produtoViewModel);
 
             return RedirectToAction("Index");
         }
 
+        [AllowAnonymous]
         private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
             var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));

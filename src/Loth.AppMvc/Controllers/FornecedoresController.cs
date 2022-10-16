@@ -9,9 +9,11 @@ using Loth.Business.Models.Fornecedores;
 using Loth.Infra.Data.Repository;
 using System;
 using Loth.Business.Core.Notificacoes;
+using Loth.AppMvc.Extensions;
 
 namespace Loth.AppMvc.Controllers
 {
+    [Authorize]
     public class FornecedoresController : BaseController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -26,16 +28,18 @@ namespace Loth.AppMvc.Controllers
             
         }
 
+        [AllowAnonymous]
         [Route("lista-de-fornecedores")]
         public async Task<ActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.Obtertodos()));
         }
 
-        [Route("editar-fornecedor/{id:guid}")]
-        public async Task<ActionResult> Edit (Guid id)
+        [AllowAnonymous]
+        [Route("dados-do-fornecedor/{id:guid}")]
+        public async Task<ActionResult> Details (Guid id)
         {
-            var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
+            var fornecedorViewModel = await ObterFornecedorEndereco(id);
 
             if (fornecedorViewModel == null)
             {
@@ -45,12 +49,14 @@ namespace Loth.AppMvc.Controllers
             return View(fornecedorViewModel);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [Route("novo-fornecedor")]
         public ActionResult Create()
         {
             return View();
         }
 
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [Route("novo-fornecedor")]
         [HttpPost]
         public async Task<ActionResult> Create(FornecedorViewModel fornecedorViewModel)
@@ -65,6 +71,7 @@ namespace Loth.AppMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        [ClaimsAuthorize("Fornecedor", "Editar")]
         [Route("editar-fornecedor/{id:guid}")]
         [HttpPost]
         public async Task<ActionResult> Edit(Guid id, FornecedorViewModel fornecedorViewModel)
@@ -81,6 +88,7 @@ namespace Loth.AppMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        [ClaimsAuthorize("Fornecedor", "Excluir")]
         [Route("excluir-fornecedor/{id:guid}")]
         public async Task<ActionResult> Delete (Guid id)
         {
@@ -95,6 +103,7 @@ namespace Loth.AppMvc.Controllers
             return View(fornecedorViewModel);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Excluir")]
         [Route("excluir-fornecedor/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
@@ -108,6 +117,7 @@ namespace Loth.AppMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        [AllowAnonymous]
         [Route("obter-endereco-fornecedor/{id:guid}")]
 
         public async Task<ActionResult> ObterEndereco(Guid id)
@@ -122,6 +132,8 @@ namespace Loth.AppMvc.Controllers
             return PartialView("_DetalhesEndereco", fornecedor);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Editar")]
+        [AllowAnonymous]
         [Route("atualizar-endereco-fornecedor")]
 
         public async Task<ActionResult> AtualizarEndereco(Guid id)
@@ -136,6 +148,7 @@ namespace Loth.AppMvc.Controllers
             return PartialView("_AtualizarEndereco", new FornecedorViewModel { Endereco = fornecedor.Endereco });
         }
 
+        [ClaimsAuthorize("Fornecedor", "Editar")]
         [Route("atualizar-endereco-fornecedor/{id:guid}")]
         [HttpPost]
 
